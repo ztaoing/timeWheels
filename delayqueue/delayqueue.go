@@ -191,6 +191,7 @@ func (d *DelayQueue) Poll(exitC chan struct{}, nowF func() int64) {
 			}
 		}
 
+		//获得到过期的数据
 		select {
 		case d.C <- item.Value:
 		//已经过期的元素已经被成功的发送出去
