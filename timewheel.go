@@ -25,7 +25,7 @@ type TimeWheel struct {
 	waitGroup     waitGroupWrapper
 }
 
-func newTimeWheel(tickMs int64, wheelSize int64, startMs int64, queue *delayqueue.DelayQueue) *TimeWheel {
+func NewTimeWheel(tickMs int64, wheelSize int64, startMs int64, queue *delayqueue.DelayQueue) *TimeWheel {
 	buckets := make([]*bucket, wheelSize)
 	//初始化每个bucket
 	for i := range buckets {
