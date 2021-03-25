@@ -7,6 +7,7 @@
 package timewheels
 
 import (
+	"errors"
 	"github.com/ztaoing/timeWheels/delayqueue"
 	"sync/atomic"
 	"time"
@@ -25,7 +26,19 @@ type TimeWheel struct {
 	waitGroup     waitGroupWrapper
 }
 
-func NewTimeWheel(tickMs int64, wheelSize int64, startMs int64, queue *delayqueue.DelayQueue) *TimeWheel {
+func NewTimeWheel(tick time.Duration, wheelSize int64) *TimeWheel {
+	//将传入的tick转换为毫秒
+	tickMs := int64(tick / time.Millisecond)
+	//tickMs不能小于0
+	if tickMs <= 0 {
+		panic(errors.New("tick must be greater than or equal to 1ms"))
+	}
+	//设置开始时间
+	startMs := timeToMs(time.Now().UTC())
+	return newTimeWheel(tickMs, wheelSize, startMs, delayqueue.New(int(wheelSize)))
+}
+
+func newTimeWheel(tickMs int64, wheelSize int64, startMs int64, queue *delayqueue.DelayQueue) *TimeWheel {
 	buckets := make([]*bucket, wheelSize)
 	//初始化每个bucket
 	for i := range buckets {
