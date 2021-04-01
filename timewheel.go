@@ -152,6 +152,7 @@ func (t *TimeWheel) add(time *Timer) bool {
 	} else {
 		//如果此到期任务的时间超过第一层时间轮，则放到上一层中
 		overflowWheel := atomic.LoadPointer(&t.overflowWheel)
+		//如果上层时间轮为nil，则new一个时间轮，并记录地址
 		if overflowWheel == nil {
 			atomic.CompareAndSwapPointer(&t.overflowWheel,
 				nil,
