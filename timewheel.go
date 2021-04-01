@@ -108,6 +108,7 @@ func (t *TimeWheel) advanceClock(expiration int64) {
 
 func (t *TimeWheel) addOrRun(time *Timer) {
 	//如果已经过期，则直接执行
+	//没有过期就加入队列
 	if !t.add(time) {
 		//异步执行
 		go time.task()
